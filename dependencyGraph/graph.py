@@ -7,10 +7,10 @@ def load_graph(f):
     g = nx.drawing.nx_agraph.read_dot(f)
     mapping = {
         n: data["label"]
-        for n, data in G.nodes(data=True)
+        for n, data in g.nodes(data=True)
     }
 
-    g=nx.relabel_nodes(G, mapping, copy=False)
+    g=nx.relabel_nodes(g, mapping, copy=False)
     return g
 
 
@@ -22,10 +22,11 @@ def ancestors_and_n_hops(G, source, Nhops):
 def ancestors_up_to(G, source, N):
     return G.subgraph(nx.single_source_shortest_path_length(G, source, cutoff=N).keys())
 
-def plot(Gp, figsize=(10, 8)):
-    pos = nx.nx_agraph.pygraphviz_layout(Gp, prog="dot")
+def plot(Gp, figsize=(10, 8), pos=None):
+    if pos is None:
+        pos = nx.nx_agraph.pygraphviz_layout(Gp, prog="dot")
 
-    plt.figure(figsize=figsize)
+    fig=plt.figure(figsize=figsize)
     nx.draw(
         Gp,
         pos,
@@ -36,3 +37,4 @@ def plot(Gp, figsize=(10, 8)):
         arrows=True,
         node_shape="s"
     )
+    return fig
